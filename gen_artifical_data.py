@@ -2,6 +2,8 @@ import cbor2
 import random
 import uuid
 import matplotlib.pyplot as plt
+from scipy.signal import find_peaks
+
 
 def add_variable_noise(value, min_noise, max_noise, min_value, max_value):
     # Scale noise level based on the input value
@@ -22,6 +24,7 @@ def read_cbor_file(file_path):
     return data
 
 
+
 sensor_data = read_cbor_file("TEST_TRIANGLE.5aevcvir.cbor")
 new_values = []
 timestamps = []
@@ -35,6 +38,8 @@ for entry in sensor_data['payload']['values']:
     timestamps.append(start_time)
     start_time += sensor_data['payload']['interval_ms']
 
+shift_count = random.randint(0, len(new_values))
+new_values = new_values[shift_count:] + new_values[:shift_count]
 # Save as a new CBOR file
 new_sensor_data = {
     "protected": sensor_data["protected"],
