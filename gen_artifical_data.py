@@ -3,11 +3,18 @@ import random
 import uuid
 import matplotlib.pyplot as plt
 
-from read_cbor_and_plot import timestamps
+def add_variable_noise(value, min_noise, max_noise, min_value, max_value):
+    # Scale noise level based on the input value
+    # Higher value => more noise, Lower value => less noise
+    normalized = (abs(value) - min_value) / (max_value - min_value)
+    noise_level = min_noise + normalized * (max_noise - min_noise)
+    return value + random.uniform(-noise_level, noise_level)
 
 
-def add_noise_to_data(data, noise_level):
-    return [value + random.uniform(-noise_level, noise_level) for value in data]
+def add_noise_to_data(data, min_noise, max_noise):
+    # Determine the range for the data to adjust noise accordingly
+    min_value, max_value = min(data), max(data)
+    return [add_variable_noise(value, min_noise, max_noise, min_value, max_value) for value in data]
 
 def read_cbor_file(file_path):
     with open(file_path, 'rb') as file:
@@ -20,9 +27,10 @@ new_values = []
 timestamps = []
 start_time = 10.0
 
+
 for entry in sensor_data['payload']['values']:
-    acc_x, acc_y, acc_z = add_noise_to_data(entry[0:3], 5)
-    gyro_x, gyro_y, gyro_z = add_noise_to_data(entry[3:6], 30)
+    acc_x, acc_y, acc_z = add_noise_to_data(entry[0:3], min_noise=1, max_noise=5)
+    gyro_x, gyro_y, gyro_z = add_noise_to_data(entry[3:6], min_noise=5, max_noise=25)
     new_values.append([acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z])
     timestamps.append(start_time)
     start_time += sensor_data['payload']['interval_ms']
