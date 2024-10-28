@@ -30,7 +30,7 @@ for entry in sensor_data['payload']['values']:
 
 timestamps = [t / 1000 for t in timestamps]
 
-"""
+
 plt.figure(figsize=(10, 6))
 plt.plot(timestamps, acc_x, label='Acc X', alpha=0.7)
 plt.plot(timestamps, acc_y, label='Acc Y', alpha=0.7)
@@ -52,4 +52,18 @@ plt.title("Gyroscope Data")
 plt.legend()
 plt.grid(True)
 plt.show()
-"""
+
+# plot both accelerometer and gyroscope data
+plt.figure(figsize=(10, 6))
+plt.plot(timestamps, acc_x, label='Acc X', alpha=0.7)
+plt.plot(timestamps, acc_y, label='Acc Y', alpha=0.7)
+plt.plot(timestamps, acc_z, label='Acc Z', alpha=0.7)
+plt.plot(timestamps, gyro_x, label='Gyro X', alpha=0.7)
+plt.plot(timestamps, gyro_y, label='Gyro Y', alpha=0.7)
+plt.plot(timestamps, gyro_z, label='Gyro Z', alpha=0.7)
+plt.xlabel("Time (s)")
+plt.ylabel("Sensor Data")
+plt.title("Sensor Data")
+plt.legend()
+plt.grid(True)
+plt.show()
